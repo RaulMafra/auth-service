@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 public interface UserRepository extends JpaRepository<User, Integer> {
 
 	@Query("SELECT e FROM User e JOIN FETCH e.role WHERE e.username = (:username)")
-	public User findByUsername(@Param("username") String username);
+	 User findByUsername(@Param("username") String username);
 	
 //	boolean existByUsername(String username);
 
