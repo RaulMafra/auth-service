@@ -3,19 +3,22 @@ package com.api.security;
 import com.api.model.User;
 import com.api.repository.UserRepository;
 import com.api.security.config.SecurityConfiguration;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
+@Component
 public class UserAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -25,7 +28,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
     private UserRepository userRepository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //Verifica se o endpoint requer autenticação antes de processar a requisição
         if (checkIfEndpointIsNotPublic(request)) {
             String token = recoveryToken(request); //Recupera o token do header Authorization da requisição
@@ -39,24 +42,26 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
                 //Define o objeto de autenticação no contexto de segurança do Spring Security
                 SecurityContextHolder.getContext().setAuthentication(authenticaton);
             } else {
-                throw new RuntimeException("The token is missing.");
+                throw new RuntimeException("The token was missing.");
             }
         }
         filterChain.doFilter(request, response); //Continua o processamento da requisição
     }
 
     //Recupera o token do cabeçalho Authorization da requisição
-    private String recoveryToken(HttpServletRequest request){
+    private String recoveryToken(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
-        if(authorizationHeader != null){
+        if (authorizationHeader != null) {
             return authorizationHeader.replace("Bearer ", "");
         }
         return null;
     }
 
     //Verifica se o recurso atual é privado, isto é, verifica se requer autenticação antes de processar a requisição.
-    private boolean checkIfEndpointIsNotPublic(HttpServletRequest request){
-        String requestURI = request.getRequestURI();
-        return List.of(SecurityConfiguration.RESOURCES_WITH_AUTHENTICATION_NOT_REQUIRED).contains(requestURI);
+    private boolean checkIfEndpointIsNotPublic(HttpServletRequest request) {
+        String requestURI = request.getRequestURI(); //Obtém o endpoint chamado na requisição pelo client
+        List<String> accessAllowed = Arrays.asList(SecurityConfiguration.RESOURCES_WITH_AUTHENTICATION_NOT_REQUIRED);
+        return accessAllowed.contains(requestURI) || (accessAllowed.contains(requestURI + "/**"));
     }
+
 }
