@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -50,7 +51,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 
     //Recupera o token do cabeçalho Authorization da requisição
     private String recoveryToken(HttpServletRequest request) {
-        String authorizationHeader = request.getHeader("Authorization");
+        String authorizationHeader = request.getHeader("Authorization"); //Acessa o valor "Authorization" do header da requisição enviada pelo client
         if (authorizationHeader != null) {
             return authorizationHeader.replace("Bearer ", "");
         }
@@ -61,7 +62,8 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
     private boolean checkIfEndpointIsNotPublic(HttpServletRequest request) {
         String requestURI = request.getRequestURI(); //Obtém o endpoint chamado na requisição pelo client
         List<String> accessAllowed = Arrays.asList(SecurityConfiguration.RESOURCES_WITH_AUTHENTICATION_NOT_REQUIRED);
-        return accessAllowed.contains(requestURI) || (accessAllowed.contains(requestURI + "/**"));
+        return requestURI.startsWith(String.valueOf(accessAllowed));
+
     }
 
 }
