@@ -1,8 +1,8 @@
-package com.api.security;
+package com.auth.security;
 
-import com.api.model.User;
-import com.api.repository.UserRepository;
-import com.api.security.config.SecurityConfiguration;
+import com.auth.model.User;
+import com.auth.repository.UserRepository;
+import com.auth.security.config.SecurityConfiguration;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;

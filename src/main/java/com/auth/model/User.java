@@ -1,8 +1,7 @@
-package com.api.model;
+package com.auth.model;
 
+import jakarta.persistence.*;
 import java.util.List;
-
-import javax.persistence.*;
 
 @Table(name = "tb_user")
 @Entity
@@ -28,8 +27,7 @@ public class User {
 
     }
 
-    public User(Long id, String name, String username, String password, List<Role> role) {
-        this.id = id;
+    public User(String name, String username, String password, List<Role> role) {
         this.name = name;
         this.username = username;
         this.password = password;

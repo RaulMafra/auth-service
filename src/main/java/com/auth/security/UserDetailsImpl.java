@@ -1,6 +1,6 @@
-package com.api.security;
+package com.auth.security;
 
-import com.api.model.User;
+import com.auth.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

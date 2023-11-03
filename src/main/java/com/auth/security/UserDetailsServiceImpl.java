@@ -1,7 +1,7 @@
-package com.api.security;
+package com.auth.security;
 
-import com.api.model.User;
-import com.api.repository.UserRepository;
+import com.auth.model.User;
+import com.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
