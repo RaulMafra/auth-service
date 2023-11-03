@@ -5,7 +5,6 @@ import com.auth.dto.RegisterUserDTO;
 import com.auth.dto.RetriveJWTTokenDTO;
 import com.auth.handler.BusinessException;
 import com.auth.model.Role;
-import com.auth.model.RoleName;
 import com.auth.model.User;
 import com.auth.repository.UserRepository;
 import com.auth.security.JwtTokenService;

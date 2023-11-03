@@ -1,6 +1,6 @@
-package com.api.model;
+package com.auth.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tb_roles")
@@ -17,8 +17,7 @@ public class Role {
 
     }
 
-    public Role(Long id, RoleName name) {
-        this.id = id;
+    public Role(RoleName name) {
         this.name = name;
     }
 
