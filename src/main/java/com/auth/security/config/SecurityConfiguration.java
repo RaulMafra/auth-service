@@ -25,7 +25,7 @@ public class SecurityConfiguration {
     public static final String[] RESOURCES_WITH_AUTHENTICATION_NOT_REQUIRED = {
             "/user/login", //Realizar login
             "/user/register", //Realizar cadastro
-            "/h2-console/**"
+            "/h2-console"
     };
 
     public static final String[] RESOURCE_ADMINISTRATOR = {
@@ -44,7 +44,7 @@ public class SecurityConfiguration {
                 .and().authorizeHttpRequests() //Habilita requisições HTTP
                 .requestMatchers(RESOURCES_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
                 .requestMatchers(RESOURCE_ADMINISTRATOR).hasRole("ADMINISTRATOR")
-                .requestMatchers(RESOURCE_USER).hasRole("COMMON_USER")
+                .requestMatchers(RESOURCE_USER).hasRole("USER")
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
                 .anyRequest().denyAll() //Bloqueia os endpoints para qualquer outra role
                 .and() //Adiciona o filtro de autenticação do usuário criado anteriormente antes do filtro padrão do Spring Security
