@@ -6,9 +6,7 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 
 @Service
 public class JwtTokenService {
@@ -44,11 +42,11 @@ public class JwtTokenService {
     }
 
     public Instant creationDate() {
-        return LocalDateTime.now().toInstant(ZoneOffset.UTC);
+        return ZonedDateTime.now(ZoneId.of("America/Sao_Paulo")).toInstant();
     }
 
     public Instant expirationDate() {
-        return LocalDateTime.now().plusHours(3).toInstant(ZoneOffset.UTC);
+        return ZonedDateTime.now(ZoneId.of("America/Sao_Paulo")).plusHours(3).toInstant();
 
     }
 }
