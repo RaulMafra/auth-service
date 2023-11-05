@@ -23,8 +23,8 @@ public class SecurityConfiguration {
     private UserAuthenticationFilter userAuthenticationFilter;
 
     public static final String[] RESOURCES_WITH_AUTHENTICATION_NOT_REQUIRED = {
-            "/user/login", //Realizar login
-            "/user/register", //Realizar cadastro
+            "/user/login",
+            "/user/register",
             "/h2-console"
     };
 
