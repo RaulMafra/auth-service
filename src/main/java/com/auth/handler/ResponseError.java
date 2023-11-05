@@ -1,19 +1,19 @@
 package com.auth.handler;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ResponseError {
 
-	private Date timestamp = new Date();
-	private String status = "error";
-	private int statusCode = 400;
+	private LocalDateTime timestamp = LocalDateTime.now();
+	private String status;
+	private int statusCode;
 	private String error;
 
-	public Date getTimestamp() {
+	public LocalDateTime getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(Date timestamp) {
+	public void setTimestamp(LocalDateTime timestamp) {
 		this.timestamp = timestamp;
 	}
 
