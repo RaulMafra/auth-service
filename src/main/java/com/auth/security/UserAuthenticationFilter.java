@@ -1,6 +1,6 @@
 package com.auth.security;
 
-import com.auth.model.User;
+import com.auth.handler.BusinessException;
 import com.auth.repository.UserRepository;
 import com.auth.security.config.SecurityConfiguration;
 import jakarta.servlet.FilterChain;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -34,15 +35,17 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
             String token = recoveryToken(request); //Recupera o token do header Authorization da requisição
             if (token != null) {
                 String subject = jwtTokenService.verificationToken(token); //Retorna o assunto(username) do token verificado.
-                User user = userRepository.findByUsername(subject).get(); //Busca o usuário pelo username
-                UserDetailsImpl userDetails = new UserDetailsImpl(user); //Cria um UserDetails com base no usuário encontrado
+//                User user = userRepository.findByUsername(subject).get(); //Busca o usuário pelo username
+//                UserDetailsImpl userDetails = new UserDetailsImpl(user); //Cria um UserDetails com base no usuário encontrado
                 //Inicializa um objeto de autenticação com o username e a(s) role(s) do usuário encontrado
+                UserDetailsImpl userDetails = new UserDetailsImpl(userRepository.findByUsername(subject).orElseThrow(() ->
+                        new UsernameNotFoundException("User not found!")));
                 Authentication authenticaton =
                         new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
                 //Define o objeto de autenticação no contexto de segurança do Spring Security
                 SecurityContextHolder.getContext().setAuthentication(authenticaton);
             } else {
-                throw new RuntimeException("The token was missing.");
+                throw new BusinessException("The token is lost or incorrect");
             }
         }
         filterChain.doFilter(request, response); //Continua o processamento da requisição
@@ -61,8 +64,8 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
     private boolean checkIfEndpointIsNotPublic(HttpServletRequest request) {
         String requestURI = request.getRequestURI(); //Obtém o endpoint chamado na requisição pelo client
         List<String> accessAllowed = Arrays.asList(SecurityConfiguration.RESOURCES_WITH_AUTHENTICATION_NOT_REQUIRED);
-        return requestURI.startsWith(String.valueOf(accessAllowed));
-
+        if(!requestURI.contains("/favicon.ico")) return !accessAllowed.stream().anyMatch(requestURI::startsWith);
+        else return false;
     }
 
 }
