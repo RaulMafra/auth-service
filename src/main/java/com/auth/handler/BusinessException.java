@@ -11,8 +11,4 @@ public class BusinessException extends RuntimeException {
 		super(msg);
 	}
 
-	public BusinessException(String msg, Object... params) {
-		super(String.format(msg, params));
-	}
-
 }
