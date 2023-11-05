@@ -38,7 +38,7 @@ public class UserService {
     //Autentica um usuário e retorna um token JWT
     public RetriveJWTTokenDTO authenticateUser(AuthUserDTO authUserDTO) {
         if(Stream.of(authUserDTO.username(), authUserDTO.password()).anyMatch(Objects::isNull)){
-            throw new BusinessException("There is some empty field!");
+            throw new BusinessException("Há algum campo vazio");
         }
         UsernamePasswordAuthenticationToken usernamePassword = new
                 UsernamePasswordAuthenticationToken(authUserDTO.username(), authUserDTO.password());
@@ -49,7 +49,7 @@ public class UserService {
 
     public void createUser(RegisterUserDTO createUserDTO) {
         if(Stream.of(createUserDTO.name(), createUserDTO.username(), createUserDTO.password(), createUserDTO.role()).anyMatch(Objects::isNull)){
-            throw new BusinessException("There is some empty field!");
+            throw new BusinessException("Há algum campo vazio");
         }
         User newUser = new User(createUserDTO.name(), createUserDTO.username(), securityConfiguration.passwordEncoder().encode(createUserDTO.password())
                 ,List.of(new Role(createUserDTO.role())));
