@@ -39,13 +39,13 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 //                UserDetailsImpl userDetails = new UserDetailsImpl(user); //Cria um UserDetails com base no usuário encontrado
                 //Inicializa um objeto de autenticação com o username e a(s) role(s) do usuário encontrado
                 UserDetailsImpl userDetails = new UserDetailsImpl(userRepository.findByUsername(subject).orElseThrow(() ->
-                        new UsernameNotFoundException("User not found!")));
+                        new UsernameNotFoundException("Usuário não encontrado")));
                 Authentication authenticaton =
                         new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
                 //Define o objeto de autenticação no contexto de segurança do Spring Security
                 SecurityContextHolder.getContext().setAuthentication(authenticaton);
             } else {
-                throw new BusinessException("The token is lost or incorrect");
+                throw new BusinessException("O token está incorreto ou foi perdido");
             }
         }
         filterChain.doFilter(request, response); //Continua o processamento da requisição
