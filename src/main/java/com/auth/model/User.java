@@ -17,15 +17,16 @@ public class User {
     private String username;
     @Column(length = 100, nullable = false)
     private String password;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> role;
 
-    public User() {
+    public User(){
 
     }
+
 
     public User(String name, String username, String password, List<Role> role) {
         this.name = name;
