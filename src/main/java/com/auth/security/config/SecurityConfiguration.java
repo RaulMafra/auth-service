@@ -29,7 +29,8 @@ public class SecurityConfiguration {
     };
 
     public static final String[] RESOURCE_ADMINISTRATOR = {
-            "/user/listUsers"
+            "/user/listUsers",
+            "/user/{id}"
     };
 
     public static final String[] RESOURCE_USER = {
@@ -38,16 +39,16 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.csrf().disable() //Desativa a proteção conta CSRF
-                .headers().frameOptions().disable().and() //Desabilita o frame para exibição do h2 console
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) //Configura a política de sessão como stateless
-                .and().authorizeHttpRequests() //Habilita requisições HTTP
+        return httpSecurity.csrf().disable()
+                .headers().frameOptions().disable().and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().authorizeHttpRequests()
                 .requestMatchers(RESOURCES_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
                 .requestMatchers(RESOURCE_ADMINISTRATOR).hasRole("ADMINISTRATOR")
                 .requestMatchers(RESOURCE_USER).hasRole("USER")
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                .anyRequest().denyAll() //Bloqueia os endpoints para qualquer outra role
-                .and() //Adiciona o filtro de autenticação do usuário criado anteriormente antes do filtro padrão do Spring Security
+                .anyRequest().denyAll()
+                .and()
                 .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
 
