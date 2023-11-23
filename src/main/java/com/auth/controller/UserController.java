@@ -15,8 +15,8 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<ResponseDTO> createUser(@RequestBody RegisterUserDTO createUserDTO) {
-        userService.createUser(createUserDTO);
+    public ResponseEntity<ResponseDTO> createUser(@RequestBody RegisterUserDTO registerUserDTO) {
+        userService.RegisterUser(registerUserDTO);
         return new ResponseEntity<>(new ResponseDTO("OK"), HttpStatus.CREATED);
     }
 
