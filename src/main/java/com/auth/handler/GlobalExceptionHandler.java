@@ -1,5 +1,7 @@
 package com.auth.handler;
 
+import com.auth.handler.exceptions.BusinessException;
+import com.auth.handler.exceptions.CheckFieldsException;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;

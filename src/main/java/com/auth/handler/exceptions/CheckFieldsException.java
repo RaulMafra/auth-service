@@ -1,4 +1,4 @@
-package com.auth.handler;
+package com.auth.handler.exceptions;
 
 public class CheckFieldsException extends BusinessException {
 

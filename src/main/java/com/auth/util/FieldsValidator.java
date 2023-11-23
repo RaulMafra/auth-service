@@ -3,7 +3,7 @@ package com.auth.util;
 import com.auth.dto.AuthUserDTO;
 import com.auth.dto.RegisterUserDTO;
 import com.auth.dto.UpdateUserDTO;
-import com.auth.handler.CheckFieldsException;
+import com.auth.handler.exceptions.CheckFieldsException;
 import com.auth.handler.MessagesExceptions;
 
 import java.util.Objects;
