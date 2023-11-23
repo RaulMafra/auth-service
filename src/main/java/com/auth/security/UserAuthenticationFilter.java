@@ -1,6 +1,7 @@
 package com.auth.security;
 
 import com.auth.handler.BusinessException;
+import com.auth.handler.MessagesExceptions;
 import com.auth.repository.UserRepository;
 import com.auth.security.config.SecurityConfiguration;
 import jakarta.servlet.FilterChain;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -33,7 +35,8 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
             String token = recoveryToken(request);
             if (token != null) {
                 String subject = jwtTokenService.verificationToken(token);
-                UserDetailsImpl userDetails = new UserDetailsImpl(userRepository.findById(Long.parseLong(String.valueOf(request.getRequestURI().charAt(6)))).get());
+                UserDetailsImpl userDetails = new UserDetailsImpl(userRepository.findByUsername(subject).
+                        orElseThrow(() -> new UsernameNotFoundException(MessagesExceptions.USER_NOT_FOUND)));
                 Authentication authenticaton =
                         new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authenticaton);
