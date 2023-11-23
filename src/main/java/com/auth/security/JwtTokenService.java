@@ -8,7 +8,9 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.*;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @Service
 public class JwtTokenService {
@@ -26,7 +28,7 @@ public class JwtTokenService {
                     .withSubject(user.getUsername())
                     .sign(algorithm);
         } catch (JWTCreationException e) {
-            throw new JWTCreationException("Erro ao gerar o token", e);
+            throw new JWTCreationException(e.getMessage(), e);
         }
     }
 
@@ -38,10 +40,12 @@ public class JwtTokenService {
                     .build()
                     .verify(token)
                     .getSubject();
-        } catch (JWTVerificationException e) {
-            throw new JWTVerificationException("Token inválido ou expirado");
         }
-    }
+        catch(JWTVerificationException e) {
+            throw new JWTVerificationException(e.getMessage());
+        }
+             }
+
 
     public Instant creationDate() {
         return ZonedDateTime.now(ZoneId.of("America/Sao_Paulo")).toInstant();
