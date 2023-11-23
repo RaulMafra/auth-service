@@ -1,7 +1,5 @@
 package com.auth.handler;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
@@ -39,10 +37,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(BusinessException.class)
-    private ResponseEntity<Object> handleBusinessException(Exception e, WebRequest request) {
-        String errorMessage = messageSource().getMessage(e.getMessage(), null, Locale.US);
-        ResponseError responseError = new ResponseError(HttpStatus.I_AM_A_TEAPOT.value(), errorMessage);
-        return createResponseEntity(responseError, headers(), HttpStatus.I_AM_A_TEAPOT, request);
+    private ResponseEntity<Object> handleBusinessException(BusinessException e, WebRequest request) {
+        if(e.getClass().isAssignableFrom(BusinessException.class)) {
+            String errorMessage = messageSource().getMessage(e.getMessage(), null, Locale.US);
+            ResponseError responseError = new ResponseError(HttpStatus.I_AM_A_TEAPOT.value(), errorMessage);
+            return createResponseEntity(responseError, headers(), HttpStatus.I_AM_A_TEAPOT, request);
+        }
+        if (e.getClass().isAssignableFrom(CheckFieldsException.class)) {
+            String errorMessage = messageSource().getMessage(e.getMessage(), null, Locale.US);
+            ResponseError responseError = new ResponseError(HttpStatus.BAD_REQUEST.value(), errorMessage);
+            return createResponseEntity(responseError, headers(), HttpStatus.BAD_REQUEST, request);
+        }
+        return handleGeneral(e, request);
     }
 
     @ExceptionHandler(AuthenticationException.class)
@@ -73,12 +79,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     private ResponseEntity<Object> handleGeneral(Exception e, WebRequest request) {
-        if (e.getClass().isAssignableFrom(TokenExpiredException.class)) {
-            Exception exception = new JWTVerificationException(MessagesExceptions.JWT_VERIFICATION_ERROR);
-            String errorMessage = messageSource().getMessage(exception.getMessage(), null, Locale.US);
-            ResponseError responsError = new ResponseError(HttpStatus.FORBIDDEN.value(), errorMessage);
-            return createResponseEntity(responsError, headers(), HttpStatus.FORBIDDEN, request);
-        }
         String errorMessage = messageSource().getMessage(MessagesExceptions.EXCEPTION_UNEXPECTED, null, Locale.US);
         ResponseError responseError = new ResponseError(HttpStatus.INTERNAL_SERVER_ERROR.value(), errorMessage);
         e.printStackTrace();
