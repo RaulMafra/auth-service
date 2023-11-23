@@ -1,6 +1,6 @@
 package com.auth.security;
 
-import com.auth.handler.BusinessException;
+import com.auth.handler.exceptions.BusinessException;
 import com.auth.handler.MessagesExceptions;
 import com.auth.repository.UserRepository;
 import com.auth.security.config.SecurityConfiguration;
@@ -41,7 +41,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
                         new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authenticaton);
             } else {
-                throw new BusinessException("O token está incorreto ou foi perdido");
+                throw new BusinessException(MessagesExceptions.INCORRECT_TOKEN_OR_LOST);
             }
         }
         filterChain.doFilter(request, response);
