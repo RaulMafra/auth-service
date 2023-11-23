@@ -1,7 +1,7 @@
 package com.auth;
 
 import com.auth.dto.RegisterUserDTO;
-import com.auth.handler.BusinessException;
+import com.auth.handler.exceptions.BusinessException;
 import com.auth.model.RoleName;
 import org.junit.jupiter.api.Test;
 
