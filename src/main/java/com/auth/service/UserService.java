@@ -1,9 +1,6 @@
 package com.auth.service;
 
-import com.auth.dto.AuthUserDTO;
-import com.auth.dto.RegisterUserDTO;
-import com.auth.dto.RetriveJWTTokenDTO;
-import com.auth.dto.UpdateUserDTO;
+import com.auth.dto.*;
 import com.auth.handler.MessagesExceptions;
 import com.auth.model.Role;
 import com.auth.model.User;
@@ -12,20 +9,18 @@ import com.auth.security.JwtTokenService;
 import com.auth.security.UserDetailsImpl;
 import com.auth.security.config.SecurityConfiguration;
 import com.auth.util.FieldsValidator;
-import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import java.awt.*;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Properties;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -54,12 +49,12 @@ public class UserService {
     public void RegisterUser(RegisterUserDTO registerUserDTO) {
         FieldsValidator.checkNullRegisterUserDTO(registerUserDTO);
         User newUser = new User(registerUserDTO.name(), registerUserDTO.username(), securityConfiguration.passwordEncoder().encode(registerUserDTO.password())
-                ,List.of(new Role(registerUserDTO.role())));
+                , List.of(new Role(registerUserDTO.role())));
         userRepository.save(newUser);
     }
 
     public void delete(String username) {
-       User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(MessagesExceptions.USER_NOT_FOUND));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(MessagesExceptions.USER_NOT_FOUND));
         userRepository.delete(user);
     }
 
@@ -68,5 +63,23 @@ public class UserService {
         FieldsValidator.checkNullUpdateUserDTO(updateUser);
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(MessagesExceptions.USER_NOT_FOUND));
         userRepository.updateUser(user.getId(), updateUser.name(), updateUser.username(), securityConfiguration.passwordEncoder().encode(updateUser.password()));
+    }
+
+    public ListUser myUser(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(MessagesExceptions.USER_NOT_FOUND));
+        return new ListUser(user.getId(), user.getName(), user.getUsername(), user.getPassword(), user.getRole().get(0).getName());
+    }
+
+    public List<ListUser> listAllUsers() {
+        Comparator<? super ListUser> comparator = Comparator.comparingLong(ListUser::id);
+
+        List<User> users = userRepository.findAll();
+        if (Optional.of(users).get().isEmpty()) {
+            throw new UsernameNotFoundException(MessagesExceptions.USER_NOT_FOUND);
+        }
+        return users.stream().map(u -> new ListUser(u.getId(), u.getName(),
+                                u.getUsername(), u.getPassword(), u.getRole().get(0).getName())).
+                                         sorted(comparator).collect(Collectors.toList());
+
     }
 }
