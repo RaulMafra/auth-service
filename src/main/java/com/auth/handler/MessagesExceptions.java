@@ -7,4 +7,5 @@ public class MessagesExceptions {
     public static final String EXCEPTION_BLANK_FIELD = "exception.blank.field";
     public static final String USER_NOT_FOUND = "exception.userNotFound";
     public static final String INCORRECT_TOKEN_OR_LOST = "exception.incorrect.token.or.lost";
+    public static final String INTEGRITY_VIOLATION = "exception.integrity.violation";
 }
