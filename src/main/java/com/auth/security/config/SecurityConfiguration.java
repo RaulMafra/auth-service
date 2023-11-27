@@ -1,6 +1,7 @@
 package com.auth.security.config;
 
 import com.auth.security.UserAuthenticationFilter;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.util.AntPathMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -23,18 +26,20 @@ public class SecurityConfiguration {
     private UserAuthenticationFilter userAuthenticationFilter;
 
     public static final String[] RESOURCES_WITH_AUTHENTICATION_NOT_REQUIRED = {
-            "/user/login",
-            "/user/register",
+            "/restservice/v1/sign-up",
+            "/restservice/v1/sign-in",
             "/h2-console"
     };
 
     public static final String[] RESOURCE_ADMINISTRATOR = {
-            "/user/listUsers",
-            "/user/{id}"
+            "/restservice/v1/master/users",
+            "/restservice/v1/master/users/**"
     };
 
+
     public static final String[] RESOURCE_USER = {
-            "/user/myUser"
+            "/restservice/v1/users/**"
+
     };
 
     @Bean
