@@ -12,15 +12,20 @@ import com.auth.security.JwtTokenService;
 import com.auth.security.UserDetailsImpl;
 import com.auth.security.config.SecurityConfiguration;
 import com.auth.util.FieldsValidator;
+import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.awt.*;
 import java.util.List;
+import java.util.Properties;
 
 @Service
 public class UserService {
