@@ -38,7 +38,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
                 UserDetailsImpl userDetails = new UserDetailsImpl(userRepository.findByUsername(subject).
                         orElseThrow(() -> new UsernameNotFoundException(MessagesExceptions.USER_NOT_FOUND)));
                 Authentication authenticaton =
-                        new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
+                                       new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authenticaton);
             } else {
                 throw new BusinessException(MessagesExceptions.INCORRECT_TOKEN_OR_LOST);
@@ -56,9 +56,8 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean checkIfEndpointIsNotPublic(HttpServletRequest request) {
-        String requestURI = request.getRequestURI();
         List<String> accessAllowed = Arrays.asList(SecurityConfiguration.RESOURCES_WITH_AUTHENTICATION_NOT_REQUIRED);
-        if(!requestURI.contains("/favicon.ico")) return !accessAllowed.stream().anyMatch(requestURI::startsWith);
+        if(!request.getRequestURI().contains("/favicon.ico")) return !accessAllowed.stream().anyMatch(request.getRequestURI()::startsWith);
         else return false;
     }
 
