@@ -15,7 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -38,7 +37,7 @@ public class UserService {
     private AuthenticationManager authenticationManager;
 
     public RetriveJWTTokenDTO authenticateUser(AuthUserDTO authUserDTO) {
-        FieldsValidator.checkNullAuthUserDTO(authUserDTO);
+        FieldsValidator.checkNullFieldsAuthUserDTO(authUserDTO);
         UsernamePasswordAuthenticationToken usernamePassword = new
                 UsernamePasswordAuthenticationToken(authUserDTO.username(), authUserDTO.password());
         Authentication authentication = authenticationManager.authenticate(usernamePassword);
@@ -46,11 +45,13 @@ public class UserService {
         return new RetriveJWTTokenDTO(jwtTokenService.generationToken((UserDetailsImpl) authentication.getPrincipal()));
     }
 
-    public void RegisterUser(RegisterUserDTO registerUserDTO) {
-        FieldsValidator.checkNullRegisterUserDTO(registerUserDTO);
-        User newUser = new User(registerUserDTO.name(), registerUserDTO.username(), securityConfiguration.passwordEncoder().encode(registerUserDTO.password())
-                , List.of(new Role(registerUserDTO.role())));
-        userRepository.save(newUser);
+    public void RegisterUser(List<RegisterUserDTO> registerUserDTO) {
+        FieldsValidator.checkNullFieldsRegisterUserDTO(registerUserDTO);
+        registerUserDTO.stream().forEach(user -> {
+            User newUser = new User(user.name(), user.username(), securityConfiguration.passwordEncoder().encode(user.password())
+                    ,List.of(new Role(user.role())));
+            userRepository.saveAndFlush(newUser);
+        });
     }
 
     public void delete(String username) {
@@ -58,14 +59,14 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    @Transactional
     public void update(UpdateUserDTO updateUser, String username) {
-        FieldsValidator.checkNullUpdateUserDTO(updateUser);
+        FieldsValidator.checkNullFieldsUpdateUserDTO(updateUser);
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(MessagesExceptions.USER_NOT_FOUND));
         userRepository.updateUser(user.getId(), updateUser.name(), updateUser.username(), securityConfiguration.passwordEncoder().encode(updateUser.password()));
     }
 
     public ListUser myUser(String username) {
+        FieldsValidator.checkNullFieldMyUser(username);
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(MessagesExceptions.USER_NOT_FOUND));
         return new ListUser(user.getId(), user.getName(), user.getUsername(), user.getPassword(), user.getRole().get(0).getName());
     }
@@ -77,9 +78,8 @@ public class UserService {
         if (Optional.of(users).get().isEmpty()) {
             throw new UsernameNotFoundException(MessagesExceptions.USER_NOT_FOUND);
         }
-        return users.stream().map(u -> new ListUser(u.getId(), u.getName(),
-                                u.getUsername(), u.getPassword(), u.getRole().get(0).getName())).
-                                         sorted(comparator).collect(Collectors.toList());
+        return users.stream().map(u -> new ListUser(u.getId(), u.getName(), u.getUsername(), u.getPassword(), u.getRole().get(0).getName()))
+                .sorted(comparator).collect(Collectors.toList());
 
     }
 }
