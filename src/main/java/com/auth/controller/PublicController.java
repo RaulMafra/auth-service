@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/restservice/v1")
 public class PublicController {
@@ -21,7 +23,7 @@ public class PublicController {
     private UserService userService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<ResponseDTO> createUser(@RequestBody RegisterUserDTO registerUserDTO) {
+    public ResponseEntity<ResponseDTO> createUser(@RequestBody List<RegisterUserDTO> registerUserDTO) {
         userService.RegisterUser(registerUserDTO);
         return new ResponseEntity<>(new ResponseDTO("OK"), HttpStatus.CREATED);
     }
