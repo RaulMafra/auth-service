@@ -4,6 +4,7 @@ import com.auth.dto.*;
 import com.auth.handler.MessagesExceptions;
 import com.auth.model.Role;
 import com.auth.model.User;
+import com.auth.repository.RoleRepository;
 import com.auth.repository.UserRepository;
 import com.auth.security.JwtTokenService;
 import com.auth.security.UserDetailsImpl;
@@ -26,6 +27,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private JwtTokenService jwtTokenService;
@@ -62,7 +66,15 @@ public class UserService {
     public void update(UpdateUserDTO updateUser, String username) {
         FieldsValidator.checkNullFieldsUpdateUserDTO(updateUser);
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(MessagesExceptions.USER_NOT_FOUND));
-        userRepository.updateUser(user.getId(), updateUser.name(), updateUser.username(), securityConfiguration.passwordEncoder().encode(updateUser.password()));
+        if(updateUser.role() == null){
+         userRepository.updateUserOnly(user.getId(), updateUser.name(), updateUser.username(),
+                 securityConfiguration.passwordEncoder().encode(updateUser.password()));
+        }
+        else {
+            userRepository.updateUserOnly(user.getId(), updateUser.name(), updateUser.username(),
+                    securityConfiguration.passwordEncoder().encode(updateUser.password()));
+            roleRepository.updateRole(user.getId(), String.valueOf(updateUser.role()));
+        }
     }
 
     public ListUser myUser(String username) {
