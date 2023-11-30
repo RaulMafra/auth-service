@@ -8,16 +8,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long>  {
 
     Optional<User> findByUsername(String username);
 
     @Transactional
     @Modifying
     @Query(nativeQuery = true, value = """
-            UPDATE tb_user
-            SET name = :name, username = :username, password = :password
-            WHERE id_user = :id
-            """)
-    void updateUser(Long id, String name, String username, String password);
+            UPDATE tb_user AS u
+            SET u.name = :newName, u.username = :newUsername, u.password = :newPassword
+            WHERE u.id_user = :id
+            """
+    )
+    void updateUserOnly(Long id, String newName, String newUsername, String newPassword);
 }
