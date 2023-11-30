@@ -31,9 +31,9 @@ public class MasterController {
     }
 
     @PutMapping("/{username}")
-    public ResponseEntity<UpdateUserDTO> updateUser(@RequestBody UpdateUserDTO updateUser, @PathVariable String username) {
+    public ResponseEntity<ResponseDTO> updateUser(@RequestBody UpdateUserDTO updateUser, @PathVariable String username) {
         userService.update(updateUser, username);
-        return new ResponseEntity<>(updateUser, HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDTO("OK"), HttpStatus.OK);
     }
 
 }
