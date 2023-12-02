@@ -40,6 +40,7 @@ public class UserService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+
     public RetriveJWTTokenDTO authenticateUser(AuthUserDTO authUserDTO) {
         FieldsValidator.checkNullFieldsAuthUserDTO(authUserDTO);
         UsernamePasswordAuthenticationToken usernamePassword = new
