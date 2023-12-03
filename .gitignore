@@ -1,5 +1,8 @@
 HELP.md
 !.mvn/wrapper/maven-wrapper.jar
+!target/auth-service-1.0.0.jar
+target/*
+
 
 
 ### STS ###
