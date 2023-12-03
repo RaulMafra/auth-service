@@ -1,5 +1,5 @@
 FROM eclipse-temurin:17-jdk-alpine
-WORKDIR /app
+WORKDIR /auth-service
 COPY target/auth-service-1.0.0.jar auth-service-1.0.0.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "auth-service-1.0.0.jar"]
+CMD ["java", "-jar", "auth-service-1.0.0.jar"]
