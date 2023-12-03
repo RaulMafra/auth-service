@@ -1,0 +1,22 @@
+{
+  "groups": [
+    {
+      "name": "security.config",
+      "type": "com.auth.security.config.JWTObject",
+      "sourceType": "com.auth.security.config.JWTObject"
+    }
+  ],
+  "properties": [
+    {
+      "name": "security.config.issuer",
+      "type": "java.lang.String",
+      "sourceType": "com.auth.security.config.JWTObject"
+    },
+    {
+      "name": "security.config.secret-key",
+      "type": "java.lang.String",
+      "sourceType": "com.auth.security.config.JWTObject"
+    }
+  ],
+  "hints": []
+}
