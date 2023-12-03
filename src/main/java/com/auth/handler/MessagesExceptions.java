@@ -8,4 +8,5 @@ public class MessagesExceptions {
     public static final String USER_NOT_FOUND = "exception.userNotFound";
     public static final String INCORRECT_TOKEN_OR_LOST = "exception.incorrect.token.or.lost";
     public static final String INTEGRITY_VIOLATION = "exception.integrity.violation";
+    public static final String CHECK_ROLE_ADMINISTRATOR = "exception.check.role.administrator";
 }
