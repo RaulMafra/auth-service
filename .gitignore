@@ -1,5 +1,8 @@
 HELP.md
 !.mvn/wrapper/maven-wrapper.jar
+/target
+!/target/auth-service-1.0.0.jar
+
 
 ### STS ###
 .apt_generated
