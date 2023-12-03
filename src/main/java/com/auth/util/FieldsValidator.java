@@ -5,6 +5,7 @@ import com.auth.dto.RegisterUserDTO;
 import com.auth.dto.UpdateUserDTO;
 import com.auth.handler.exceptions.CheckFieldsException;
 import com.auth.handler.MessagesExceptions;
+import com.auth.model.RoleName;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,10 +19,13 @@ public class FieldsValidator {
         }
     }
 
-    public static void checkNullFieldsRegisterUserDTO(List<RegisterUserDTO> registerUserDTO) {
+    public static void checkFieldsRegisterUserDTO(List<RegisterUserDTO> registerUserDTO) {
         registerUserDTO.stream().forEach(user -> {
             if (Stream.of(user.name(), user.username(), user.password(), user.role()).anyMatch(Objects::isNull)){
                 throw new CheckFieldsException(MessagesExceptions.EXCEPTION_BLANK_FIELD);
+            }
+            if(user.role().equals(RoleName.ROLE_ADMINISTRATOR)){
+                throw new CheckFieldsException(MessagesExceptions.CHECK_ROLE_ADMINISTRATOR);
             }
         });
     }

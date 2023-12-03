@@ -51,7 +51,7 @@ public class UserService {
     }
 
     public void RegisterUser(List<RegisterUserDTO> registerUserDTO) {
-        FieldsValidator.checkNullFieldsRegisterUserDTO(registerUserDTO);
+        FieldsValidator.checkFieldsRegisterUserDTO(registerUserDTO);
         registerUserDTO.stream().forEach(user -> {
             User newUser = new User(user.name(), user.username(), securityConfiguration.passwordEncoder().encode(user.password())
                     ,List.of(new Role(user.role())));
