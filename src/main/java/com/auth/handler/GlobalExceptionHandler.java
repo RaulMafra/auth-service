@@ -1,5 +1,6 @@
 package com.auth.handler;
 
+import com.amazonaws.AmazonServiceException;
 import com.auth.handler.exceptions.BusinessException;
 import com.auth.handler.exceptions.CheckFieldsException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -85,6 +86,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String message = messageSource().getMessage(exception.getMessage(), null, Locale.US);
         ResponseError responseError = new ResponseError(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, message, httpRequest.getRequestURI());
         return createResponseEntity(responseError, headers(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(AmazonServiceException.class)
+    public ResponseEntity<Object> handleEmailSending(AmazonServiceException e, WebRequest request, HttpServletRequest httpRequest){
+        AmazonServiceException exception = new AmazonServiceException(MessagesExceptions.FAILURE_SEND_EMAIL);
+        String message = messageSource().getMessage(exception.getMessage(), null, Locale.US);
+        ResponseError responseError = new ResponseError(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR, message, httpRequest.getRequestURI());
+        return createResponseEntity(responseError, headers(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
 

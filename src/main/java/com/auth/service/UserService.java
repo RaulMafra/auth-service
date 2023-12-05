@@ -1,7 +1,9 @@
 package com.auth.service;
 
 import com.auth.dto.*;
+import com.auth.emailservice.service.EmailSenderService;
 import com.auth.handler.MessagesExceptions;
+import com.auth.handler.exceptions.EmailServiceException;
 import com.auth.model.Role;
 import com.auth.model.User;
 import com.auth.repository.RoleRepository;
@@ -40,6 +42,8 @@ public class UserService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private EmailSenderService emailSenderService;
 
     public RetriveJWTTokenDTO authenticateUser(AuthUserDTO authUserDTO) {
         FieldsValidator.checkNullFieldsAuthUserDTO(authUserDTO);
@@ -57,6 +61,13 @@ public class UserService {
                     ,List.of(new Role(user.role())));
             userRepository.saveAndFlush(newUser);
         });
+        try{
+         emailSenderService.sendEmail("raulcesar.sm@gmail.com", "Sign-up of user", "Another user has been registered!");
+
+        } catch(EmailServiceException e){
+            throw new EmailServiceException(MessagesExceptions.FAILURE_SEND_EMAIL);
+
+        }
     }
 
     public void delete(String username) {
