@@ -1,0 +1,12 @@
+#credentials for token generation
+security:
+config:
+secret_key: AbIJTDMFc7yUa5MhvcP03nJPyCPzZtQcGEp-zWfOkEE
+issuer: auth-service
+
+#credentials AWS
+aws:
+region: ${aws_region}
+credentials:
+accessKeyId: ${aws_access_key_id}
+secretKey: ${aws_secret_access_key}
