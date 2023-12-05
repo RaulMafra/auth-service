@@ -1,0 +1,7 @@
+#credentials for token generation
+security.config.secret_key=AbIJTDMFc7yUa5MhvcP03nJPyCPzZtQcGEp-zWfOkEE
+security.config.issuer=auth-service
+
+#credential AWS IAM
+accessKeyId: AKIAXKKQYWK3SZHSKDLP
+secretKey: 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
