@@ -1,23 +1,31 @@
 package com.auth.security.config;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@ConfigurationProperties(value = "jwt.config")
 public class JWTObject {
 
-    private final String SECRET_KEY = System.getenv().get("JWT_SECRET_KEY");
-    private final String ISSUER = System.getenv().get("JWT_ISSUER");
+    private String ISSUER;
+    private String SECRET_KEY;
 
     public JWTObject() {
     }
 
-    public String getSecret_key() {
-        return SECRET_KEY;
-    }
-
-
-    public String getIssuer() {
+    public String getISSUER() {
         return ISSUER;
     }
 
+    public void setISSUER(String ISSUER) {
+        this.ISSUER = ISSUER;
+    }
+
+    public String getSECRET_KEY() {
+        return SECRET_KEY;
+    }
+
+    public void setSECRET_KEY(String SECRET_KEY) {
+        this.SECRET_KEY = SECRET_KEY;
+    }
 }
