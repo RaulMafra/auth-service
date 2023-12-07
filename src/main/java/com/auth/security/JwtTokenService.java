@@ -20,9 +20,9 @@ public class JwtTokenService {
 
     public String generationToken(UserDetailsImpl user) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(jwtObject.getSecret_key());
+            Algorithm algorithm = Algorithm.HMAC256(jwtObject.getSECRET_KEY());
             return JWT.create()
-                    .withIssuer(jwtObject.getIssuer())
+                    .withIssuer(jwtObject.getISSUER())
                     .withIssuedAt(creationDate())
                     .withExpiresAt(expirationDate())
                     .withSubject(user.getUsername())
@@ -34,9 +34,9 @@ public class JwtTokenService {
 
     public String verificationToken(String token) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(jwtObject.getSecret_key());
+            Algorithm algorithm = Algorithm.HMAC256(jwtObject.getSECRET_KEY());
             return JWT.require(algorithm)
-                    .withIssuer(jwtObject.getIssuer())
+                    .withIssuer(jwtObject.getISSUER())
                     .build()
                     .verify(token)
                     .getSubject();
