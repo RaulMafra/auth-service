@@ -15,7 +15,7 @@ public class TranslatedExceptionsMessagesTest {
     @Test
     public void givenExceptionTranslator() {
         String errorMessage = messageSource().getMessage(UNEXPECTED_ERROR, null, Locale.US);
-        Assertions.assertEquals(errorMessage, "An unexpected exception occured while processing your request.");
+        Assertions.assertEquals(errorMessage, "An unexpected error occured while processing your request");
     }
 
     @Bean
