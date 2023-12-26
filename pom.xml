@@ -9,11 +9,11 @@
         <version>3.0.6</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>api</groupId>
+    <groupId>com-auth</groupId>
     <artifactId>auth-service</artifactId>
     <version>1.0.0</version>
-    <name>login-service</name>
-    <description>Login service with Java and Spring Framework</description>
+    <name>auth-service</name>
+    <description>Authentication service with Java and Spring</description>
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -52,19 +52,11 @@
         </dependency>
 
         <dependency>
-            <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc8</artifactId>
-            <version>12.2.0.1</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
             <version>4.4.0</version>
         </dependency>
 
-
-        <!-- swagger dependecy -->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
@@ -75,7 +67,6 @@
             <artifactId>springfox-swagger2</artifactId>
             <version>2.9.2</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.hibernate.validator</groupId>
@@ -104,9 +95,16 @@
 
         <dependency>
             <groupId>com.amazonaws</groupId>
-             <artifactId>aws-java-sdk-ses</artifactId>
+            <artifactId>aws-java-sdk-ses</artifactId>
             <version>1.12.472</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.6.0</version>
+        </dependency>
+
 
     </dependencies>
     <build>
