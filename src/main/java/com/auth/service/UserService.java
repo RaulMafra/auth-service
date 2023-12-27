@@ -58,7 +58,7 @@ public class UserService {
         FieldsValidator.checkFieldsRegisterUserDTO(registerUserDTO);
         registerUserDTO.stream().forEach(user -> {
             User newUser = new User(user.name(), user.username(), securityConfiguration.passwordEncoder().encode(user.password())
-                    ,List.of(new Role(user.role())));
+                    ,new Role(user.role()));
             userRepository.saveAndFlush(newUser);
         });
         try{
@@ -92,7 +92,7 @@ public class UserService {
     public ListUser myUser(String username) {
         FieldsValidator.checkNullFieldMyUser(username);
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(MessagesExceptions.USER_NOT_FOUND));
-        return new ListUser(user.getId(), user.getName(), user.getUsername(), user.getPassword(), user.getRole().get(0).getName());
+        return new ListUser(user.getId(), user.getName(), user.getUsername(), user.getPassword(), user.getRole().getName());
     }
 
     public List<ListUser> listAllUsers() {
@@ -102,7 +102,7 @@ public class UserService {
         if (Optional.of(users).get().isEmpty()) {
             throw new UsernameNotFoundException(MessagesExceptions.USER_NOT_FOUND);
         }
-        return users.stream().map(u -> new ListUser(u.getId(), u.getName(), u.getUsername(), u.getPassword(), u.getRole().get(0).getName()))
+        return users.stream().map(u -> new ListUser(u.getId(), u.getName(), u.getUsername(), u.getPassword(), u.getRole().getName()))
                 .sorted(comparator).collect(Collectors.toList());
 
     }

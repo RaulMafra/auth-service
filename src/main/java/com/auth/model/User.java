@@ -1,7 +1,6 @@
 package com.auth.model;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Table(name = "tb_user")
 @Entity
@@ -17,18 +16,18 @@ public class User {
     private String username;
     @Column(length = 100, nullable = false)
     private String password;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> role;
+            joinColumns = @JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_role"))
+    private Role role;
 
     public User(){
 
     }
 
 
-    public User(String name, String username, String password, List<Role> role) {
+    public User(String name, String username, String password, Role role) {
         this.name = name;
         this.username = username;
         this.password = password;
@@ -67,11 +66,11 @@ public class User {
         this.password = password;
     }
 
-    public List<Role> getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(List<Role> role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }

@@ -11,7 +11,7 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     @Modifying
     @Transactional
     @Query(nativeQuery = true, value = """
-            UPDATE tb_roles AS roles SET roles.name = :newRole WHERE roles.id = :id
+            UPDATE tb_roles SET name = :newRole WHERE id_role = :id
             """)
     void updateRole(Long id, String newRole);
 }
