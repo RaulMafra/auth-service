@@ -5,7 +5,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -15,14 +14,11 @@ import java.time.ZonedDateTime;
 @Service
 public class JwtTokenService {
 
-    @Autowired
-    private JWTObject jwtObject;
-
     public String generationToken(UserDetailsImpl user) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(jwtObject.getSECRET_KEY());
+            Algorithm algorithm = Algorithm.HMAC256(JWTObject.JWT_SECRET_KEY);
             return JWT.create()
-                    .withIssuer(jwtObject.getISSUER())
+                    .withIssuer(JWTObject.JWT_ISSUER)
                     .withIssuedAt(creationDate())
                     .withExpiresAt(expirationDate())
                     .withSubject(user.getUsername())
@@ -34,9 +30,9 @@ public class JwtTokenService {
 
     public String verificationToken(String token) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(jwtObject.getSECRET_KEY());
+            Algorithm algorithm = Algorithm.HMAC256(JWTObject.JWT_SECRET_KEY);
             return JWT.require(algorithm)
-                    .withIssuer(jwtObject.getISSUER())
+                    .withIssuer(JWTObject.JWT_ISSUER)
                     .build()
                     .verify(token)
                     .getSubject();

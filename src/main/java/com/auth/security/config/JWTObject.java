@@ -7,25 +7,8 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(value = "jwt.config")
 public class JWTObject {
 
-    private String ISSUER;
-    private String SECRET_KEY;
+    public static final String JWT_ISSUER = System.getenv("JWT_ISSUER");
 
-    public JWTObject() {
-    }
+    public static final String JWT_SECRET_KEY = System.getenv("JWT_SECRET_KEY");
 
-    public String getISSUER() {
-        return ISSUER;
-    }
-
-    public void setISSUER(String ISSUER) {
-        this.ISSUER = ISSUER;
-    }
-
-    public String getSECRET_KEY() {
-        return SECRET_KEY;
-    }
-
-    public void setSECRET_KEY(String SECRET_KEY) {
-        this.SECRET_KEY = SECRET_KEY;
-    }
 }
