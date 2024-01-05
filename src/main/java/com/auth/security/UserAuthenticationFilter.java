@@ -1,6 +1,5 @@
 package com.auth.security;
 
-import com.auth.handler.exceptions.BusinessException;
 import com.auth.handler.MessagesExceptions;
 import com.auth.repository.UserRepository;
 import com.auth.security.config.SecurityConfiguration;
@@ -9,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +29,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private UserRepository userRepository;
 
+
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (checkIfEndpointIsNotPublic(request)) {
@@ -41,9 +42,10 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
                                        new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authenticaton);
             } else {
-                throw new BusinessException(MessagesExceptions.INCORRECT_TOKEN_OR_LOST);
+                throw new BadCredentialsException(MessagesExceptions.INCORRECT_TOKEN_OR_LOST);
             }
         }
+
         filterChain.doFilter(request, response);
     }
 
