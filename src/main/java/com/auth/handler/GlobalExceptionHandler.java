@@ -1,6 +1,7 @@
 package com.auth.handler;
 
 import com.amazonaws.AmazonServiceException;
+import com.auth.handler.exceptions.AuthException;
 import com.auth.handler.exceptions.CheckFieldsException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.MessageSource;
@@ -67,6 +68,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             ResponseError responseError = new ResponseError(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND, message.concat(" " + nameUser[2]), httpRequest.getRequestURI());
             return createResponseEntity(responseError, headers(), HttpStatus.NOT_FOUND, request);
         }
+        if(e.getClass().isAssignableFrom(AuthException.class)){
+            AuthenticationException exception = new AuthException(e.getMessage());
+            String message = messageSource().getMessage(exception.getMessage(), null, Locale.US);
+            ResponseError responseError = new ResponseError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED, message, httpRequest.getRequestURI());
+            return createResponseEntity(responseError, headers(), HttpStatus.UNAUTHORIZED, request);
+        }
         return handleGeneral(e, request, httpRequest);
     }
 
@@ -85,7 +92,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ResponseError responseError = new ResponseError(HttpStatus.SERVICE_UNAVAILABLE.value(), HttpStatus.SERVICE_UNAVAILABLE, message, httpRequest.getRequestURI());
         return createResponseEntity(responseError, headers(), HttpStatus.SERVICE_UNAVAILABLE, request);
     }
-
 
     @ExceptionHandler(Exception.class)
     private ResponseEntity<Object> handleGeneral(RuntimeException e, WebRequest request, HttpServletRequest httpRequest) {

@@ -3,6 +3,7 @@ package com.auth.service;
 import com.auth.dto.*;
 import com.auth.emailservice.service.EmailSenderService;
 import com.auth.handler.MessagesExceptions;
+import com.auth.handler.exceptions.AuthException;
 import com.auth.handler.exceptions.EmailServiceException;
 import com.auth.model.Role;
 import com.auth.model.User;
@@ -12,6 +13,7 @@ import com.auth.security.JwtTokenService;
 import com.auth.security.UserDetailsImpl;
 import com.auth.security.config.SecurityConfiguration;
 import com.auth.util.FieldsValidator;
+import com.auth0.jwt.JWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -62,7 +64,8 @@ public class UserService {
             userRepository.saveAndFlush(newUser);
         });
         try{
-         emailSenderService.sendEmail("raulcesar.sm@gmail.com", "Sign-up of user", "Another user has been registered!");
+         emailSenderService.sendEmail("raulcesar.sm@gmail.com", "Sign-up of user", "Another user has been registered123!");
+            System.out.println("E-mail enviado!");
 
         } catch(EmailServiceException e){
             throw new EmailServiceException(MessagesExceptions.FAILURE_SEND_EMAIL);
@@ -89,8 +92,12 @@ public class UserService {
         }
     }
 
-    public ListUser myUser(String username) {
+    public ListUser myUser(String username, String token) {
         FieldsValidator.checkNullFieldMyUser(username);
+        String bearer = JWT.decode(token).getSubject();
+        if(!username.equals(bearer)){
+            throw new AuthException(MessagesExceptions.CHECK_MATCH_GET_USER);
+        }
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(MessagesExceptions.USER_NOT_FOUND));
         return new ListUser(user.getId(), user.getName(), user.getUsername(), user.getPassword(), user.getRole().getName());
     }
