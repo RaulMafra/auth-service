@@ -1,7 +1,6 @@
 package com.auth.handler;
 
 import com.amazonaws.AmazonServiceException;
-import com.auth.handler.exceptions.BusinessException;
 import com.auth.handler.exceptions.CheckFieldsException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.MessageSource;
@@ -23,7 +22,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.Locale;
 
-
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -41,19 +39,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return messageSource;
     }
 
-    @ExceptionHandler(BusinessException.class)
-    private ResponseEntity<Object> handleBusinessException(BusinessException e, WebRequest request, HttpServletRequest httpRequest) {
-        if (e.getClass().isAssignableFrom(BusinessException.class)) {
-            String message = messageSource().getMessage(e.getMessage(), null, Locale.US);
-            ResponseError responseError = new ResponseError(HttpStatus.I_AM_A_TEAPOT.value(), HttpStatus.I_AM_A_TEAPOT, message, httpRequest.getRequestURI());
-            return createResponseEntity(responseError, headers(), HttpStatus.I_AM_A_TEAPOT, request);
-        }
-        if (e.getClass().isAssignableFrom(CheckFieldsException.class)) {
-            String message = messageSource().getMessage(e.getMessage(), null, Locale.US);
-            ResponseError responseError = new ResponseError(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, message, httpRequest.getRequestURI());
-            return createResponseEntity(responseError, headers(), HttpStatus.BAD_REQUEST, request);
-        }
-        return handleGeneral(e, request, httpRequest);
+    @ExceptionHandler(CheckFieldsException.class)
+    private ResponseEntity<Object> handleFieldsException(CheckFieldsException e, WebRequest request, HttpServletRequest httpRequest) {
+        String message = messageSource().getMessage(e.getMessage(), null, Locale.US);
+        ResponseError responseError = new ResponseError(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, message, httpRequest.getRequestURI());
+        return createResponseEntity(responseError, headers(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(AuthenticationException.class)
@@ -89,20 +79,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AmazonServiceException.class)
-    public ResponseEntity<Object> handleEmailSending(AmazonServiceException e, WebRequest request, HttpServletRequest httpRequest){
+    public ResponseEntity<Object> handleEmailSending(AmazonServiceException e, WebRequest request, HttpServletRequest httpRequest) {
         AmazonServiceException exception = new AmazonServiceException(MessagesExceptions.FAILURE_SEND_EMAIL);
         String message = messageSource().getMessage(exception.getMessage(), null, Locale.US);
-        ResponseError responseError = new ResponseError(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR, message, httpRequest.getRequestURI());
-        return createResponseEntity(responseError, headers(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+        ResponseError responseError = new ResponseError(HttpStatus.SERVICE_UNAVAILABLE.value(), HttpStatus.SERVICE_UNAVAILABLE, message, httpRequest.getRequestURI());
+        return createResponseEntity(responseError, headers(), HttpStatus.SERVICE_UNAVAILABLE, request);
     }
 
 
     @ExceptionHandler(Exception.class)
-    private ResponseEntity<Object> handleGeneral(Exception e, WebRequest request, HttpServletRequest httpRequest) {
-        String message = messageSource().getMessage(MessagesExceptions.EXCEPTION_UNEXPECTED, null, Locale.US);
-        ResponseError responseError = new ResponseError(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR, message, httpRequest.getRequestURI());
-        e.printStackTrace();
-        return createResponseEntity(responseError, headers(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    private ResponseEntity<Object> handleGeneral(RuntimeException e, WebRequest request, HttpServletRequest httpRequest) {
+            String message = messageSource().getMessage(MessagesExceptions.EXCEPTION_UNEXPECTED, null, Locale.US);
+            ResponseError responseError = new ResponseError(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR, message, httpRequest.getRequestURI());
+            e.printStackTrace();
+            return createResponseEntity(responseError, headers(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 }
 
