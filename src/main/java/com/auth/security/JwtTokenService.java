@@ -4,7 +4,6 @@ import com.auth.security.config.JWTObject;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -24,7 +23,7 @@ public class JwtTokenService {
                     .withSubject(user.getUsername())
                     .sign(algorithm);
         } catch (JWTCreationException e) {
-            throw new JWTCreationException(e.getMessage(), e);
+            throw new JWTCreationException(e.getMessage(), e.getCause());
         }
     }
 
@@ -36,11 +35,10 @@ public class JwtTokenService {
                     .build()
                     .verify(token)
                     .getSubject();
+        } catch (JWTCreationException e) {
+            throw new JWTCreationException(e.getMessage(), e.getCause());
         }
-        catch(JWTVerificationException e) {
-            throw new JWTVerificationException(e.getMessage());
-        }
-             }
+    }
 
 
     public Instant creationDate() {
