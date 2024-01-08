@@ -2,7 +2,7 @@ package com.auth.model;
 
 import jakarta.persistence.*;
 
-@Table(name = "tb_user")
+@Table(name = "tb_users")
 @Entity
 public class User {
 
