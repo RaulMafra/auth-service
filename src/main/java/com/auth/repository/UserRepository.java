@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long>  {
     @Transactional
     @Modifying
     @Query(nativeQuery = true, value = """
-            UPDATE tb_user
+            UPDATE tb_users
             SET name = :newName, username = :newUsername, password = :newPassword
             WHERE id_user = :id
             """
