@@ -71,8 +71,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         if(e.getClass().isAssignableFrom(AuthException.class)){
             AuthenticationException exception = new AuthException(e.getMessage());
             String message = messageSource().getMessage(exception.getMessage(), null, Locale.US);
-            ResponseError responseError = new ResponseError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED, message, httpRequest.getRequestURI());
-            return createResponseEntity(responseError, headers(), HttpStatus.UNAUTHORIZED, request);
+            ResponseError responseError = new ResponseError(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, message, httpRequest.getRequestURI());
+            return createResponseEntity(responseError, headers(), HttpStatus.BAD_REQUEST, request);
         }
         return handleGeneral(e, request, httpRequest);
     }
