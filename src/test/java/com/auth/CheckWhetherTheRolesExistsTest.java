@@ -1,7 +1,7 @@
 package com.auth;
 
 import com.auth.dto.RegisterUserDTO;
-import com.auth.handler.exceptions.BusinessException;
+import com.auth.handler.exceptions.CheckFieldsException;
 import com.auth.model.RoleName;
 import org.junit.jupiter.api.Test;
 
@@ -30,10 +30,10 @@ public class CheckWhetherTheRolesExistsTest {
         List<RoleName> roles = Arrays.asList(RoleName.values());
 
         if(roles.stream().noneMatch(role -> role.equals(user1.role()))){
-            throw new BusinessException("Role not exists");
+            throw new CheckFieldsException("Role not exists");
         }
 
-        assertDoesNotThrow(() -> BusinessException.class);
+        assertDoesNotThrow(() -> CheckFieldsException.class);
     }
 
 }
