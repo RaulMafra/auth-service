@@ -25,39 +25,50 @@ public class SecurityConfiguration {
     public static final String[] RESOURCES_WITH_AUTHENTICATION_NOT_REQUIRED = {
             "/restservice/v1/sign-up",
             "/restservice/v1/sign-in",
-            "/h2-console"
     };
 
-    public static final String[] RESOURCE_ADMINISTRATOR = {
-            "/restservice/v1/master/users",
-            "/restservice/v1/master/users/**"
+    public static final String[] RESOURCES_OPEN_API = {
+                "/favicon/**",
+                "/swagger-ui.html",
+                "/v3/api-docs/**",
+                "/swagger-ui/**",
+                "/webjars/**",
+                "/configuration/ui",
+                "/swagger-resources/**",
+                "/configuration/security"
     };
 
+    public static final String H2_DATABASE = "/h2-console";
 
-    public static final String[] RESOURCE_USER = {
-            "/restservice/v1/users/**"
 
-    };
+    public static final String[] RESOURCE_ADMINISTRATOR = {"/restservice/v1/master/users","/restservice/v1/master/users/**"};
+
+
+    public static final String RESOURCE_USER = "/restservice/v1/users/**";
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.csrf().disable()
-                .headers().frameOptions().disable().and()
+        return httpSecurity.csrf().disable().headers()
+                .frameOptions().disable().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeHttpRequests()
-                .requestMatchers(RESOURCES_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
-                .requestMatchers(RESOURCE_ADMINISTRATOR).hasRole("ADMINISTRATOR")
-                .requestMatchers(RESOURCE_USER).hasRole("USER")
-                .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                .anyRequest().denyAll()
                 .and()
+                .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers(RESOURCES_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
+                        .requestMatchers(RESOURCE_ADMINISTRATOR).hasRole("ADMINISTRATOR")
+                        .requestMatchers(RESOURCE_USER).hasRole("USER")
+                        .requestMatchers(H2_DATABASE).permitAll()
+                        .requestMatchers(RESOURCES_OPEN_API).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
+                        .anyRequest().denyAll())
                 .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
 
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws
+            Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 

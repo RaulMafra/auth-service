@@ -17,8 +17,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 @Component
 public class UserAuthenticationFilter extends OncePerRequestFilter {
@@ -32,17 +30,17 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (checkIfEndpointIsNotPublic(request)) {
+        if (hasAuthorization(request)) {
             String token = recoveryToken(request);
             if (token != null) {
                 String subject = jwtTokenService.verificationToken(token);
                 UserDetailsImpl userDetails = new UserDetailsImpl(userRepository.findByUsername(subject).
                         orElseThrow(() -> new UsernameNotFoundException(MessagesExceptions.USER_NOT_FOUND)));
                 Authentication authenticaton =
-                                       new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
+                        new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authenticaton);
             } else {
-                throw new BadCredentialsException(MessagesExceptions.INCORRECT_TOKEN_OR_LOST);
+                throw new BadCredentialsException("The token is incorrect or lost");
             }
         }
 
@@ -57,9 +55,12 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    private boolean checkIfEndpointIsNotPublic(HttpServletRequest request) {
-        List<String> accessAllowed = Arrays.asList(SecurityConfiguration.RESOURCES_WITH_AUTHENTICATION_NOT_REQUIRED);
-        if(!request.getRequestURI().contains("/favicon.ico")) return !accessAllowed.stream().anyMatch(request.getRequestURI()::startsWith);
+    private boolean hasAuthorization(HttpServletRequest request) {
+        for (String paths : SecurityConfiguration.RESOURCE_ADMINISTRATOR) {
+            String replacedPath = paths.replace("/**", "");
+            if (request.getRequestURI().contains(replacedPath)) return true;
+        }
+        if (request.getRequestURI().contains(SecurityConfiguration.RESOURCE_USER.replace("/**", ""))) return true;
         else return false;
     }
 
