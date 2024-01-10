@@ -56,7 +56,7 @@ public class UserService {
         return new RetriveJWTTokenDTO(jwtTokenService.generationToken((UserDetailsImpl) authentication.getPrincipal()));
     }
 
-    public void RegisterUser(List<RegisterUserDTO> registerUserDTO) {
+    public void registerUser(List<RegisterUserDTO> registerUserDTO) {
         FieldsValidator.checkFieldsRegisterUserDTO(registerUserDTO);
         registerUserDTO.stream().forEach(user -> {
             User newUser = new User(user.name(), user.username(), securityConfiguration.passwordEncoder().encode(user.password())
@@ -64,12 +64,9 @@ public class UserService {
             userRepository.saveAndFlush(newUser);
         });
         try{
-         emailSenderService.sendEmail("raulcesar.sm@gmail.com", "Sign-up of user", "Another user has been registered123!");
-            System.out.println("E-mail enviado!");
-
+         emailSenderService.sendEmail("raulcesar.sm@gmail.com", "Sign-up of user", "Another user has been registered!");
         } catch(EmailServiceException e){
             throw new EmailServiceException(MessagesExceptions.FAILURE_SEND_EMAIL);
-
         }
     }
 
@@ -92,24 +89,24 @@ public class UserService {
         }
     }
 
-    public ListUser myUser(String username, String token) {
+    public ListUserDTO myUser(String username, String token) {
         FieldsValidator.checkNullFieldMyUser(username);
         String bearer = JWT.decode(token).getSubject();
         if(!username.equals(bearer)){
             throw new AuthException(MessagesExceptions.CHECK_MATCH_GET_USER);
         }
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(MessagesExceptions.USER_NOT_FOUND));
-        return new ListUser(user.getId(), user.getName(), user.getUsername(), user.getPassword(), user.getRole().getName());
+        return new ListUserDTO(user.getId(), user.getName(), user.getUsername(), user.getPassword(), user.getRole().getName());
     }
 
-    public List<ListUser> listAllUsers() {
-        Comparator<? super ListUser> comparator = Comparator.comparingLong(ListUser::id);
+    public List<ListUserDTO> listAllUsers() {
+        Comparator<? super ListUserDTO> comparator = Comparator.comparingLong(ListUserDTO::id);
 
         List<User> users = userRepository.findAll();
         if (Optional.of(users).get().isEmpty()) {
             throw new UsernameNotFoundException(MessagesExceptions.USER_NOT_FOUND);
         }
-        return users.stream().map(u -> new ListUser(u.getId(), u.getName(), u.getUsername(), u.getPassword(), u.getRole().getName()))
+        return users.stream().map(u -> new ListUserDTO(u.getId(), u.getName(), u.getUsername(), u.getPassword(), u.getRole().getName()))
                 .sorted(comparator).collect(Collectors.toList());
 
     }
