@@ -32,7 +32,7 @@ public class MasterController {
             @ApiResponse(responseCode = "403", content = {@Content(mediaType = "application/json")}, description = "The request was denied")
     })
     @GetMapping
-    public ResponseEntity<List<ListUserDTO>> listUsers(String authorization) {
+    public ResponseEntity<List<ListUserDTO>> listUsers() {
         List<ListUserDTO> listUserDTOS = userService.listAllUsers();
         return new ResponseEntity<>(listUserDTOS, HttpStatus.OK);
     }
@@ -44,7 +44,7 @@ public class MasterController {
             @ApiResponse(responseCode = "404", content = {@Content(mediaType = "application/json")}, description = "User not found")
     })
     @DeleteMapping("/{username}")
-    public ResponseEntity<ResponseDTO> deleteUser(@RequestHeader(value = "Authorization") String authorization, @PathVariable String username){
+    public ResponseEntity<ResponseDTO> deleteUser(@PathVariable String username){
         userService.delete(username);
         return new ResponseEntity<>(new ResponseDTO("OK"), HttpStatus.OK);
     }

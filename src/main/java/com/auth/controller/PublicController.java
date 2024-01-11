@@ -41,7 +41,7 @@ public class PublicController {
     @Operation(summary = "Authenticate to get access token")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = AuthUserDTO.class))}, description = "Authentication successful"),
-            @ApiResponse(responseCode = "400", content = {@Content(mediaType = "application/json")}, description = "The some incorret field"),
+            @ApiResponse(responseCode = "400", content = {@Content(mediaType = "application/json")}, description = "The is some incorret field"),
             @ApiResponse(responseCode = "401", content = {@Content(mediaType = "application/json")}, description = "Authentication unauthorized")
     })
     @PostMapping("/sign-in")

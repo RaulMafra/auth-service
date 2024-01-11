@@ -29,7 +29,7 @@ public class UserController {
     @Operation(summary = "Get my user informations")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ListUserDTO.class))}, description = "Informations getted successfully"),
-            @ApiResponse(responseCode = "400", content = {@Content(mediaType = "application/json")}, description = "Informations not matchers or there is some incorrect field"),
+            @ApiResponse(responseCode = "400", content = {@Content(mediaType = "application/json")}, description = "Informations not matchers"),
             @ApiResponse(responseCode = "403", content = {@Content(mediaType = "application/json")}, description = "The request was denied")
     })
     @GetMapping("/{username}")
