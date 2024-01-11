@@ -1,0 +1,50 @@
+[
+    {
+        "name": "Jose",
+        "username": "jose_0111",
+        "password": "jose_0988",
+        "role": "ROLE_USER"
+    },
+    {
+        "name": "Miguel",
+        "username": "miguel_0222",
+        "password": "miguel_4563",
+        "role": "ROLE_USER"
+    },
+    {
+        "name": "Gabriel",
+        "username": "gabriel_0333",
+        "password": "gabriel_6543",
+        "role": "ROLE_USER"
+    },
+    {
+        "name": "Ailton",
+        "username": "ailton_0444",
+        "password": "ailton_8764",
+        "role": "ROLE_USER"
+    },
+    {
+        "name": "Henrique",
+        "username": "henri_0555",
+        "password": "henri_8764",
+        "role": "ROLE_USER"
+    },
+        {
+        "name": "Joice",
+        "username": "joice_0666",
+        "password": "joice_2341",
+        "role": "ROLE_USER"
+    },
+    {
+        "name": "Carlos",
+        "username": "carlos_0777",
+        "password": "carlos_3456",
+        "role": "ROLE_USER"
+    },
+    {
+        "name": "Gabriela",
+        "username": "gabriela_0888",
+        "password": "gabriela_4532",
+        "role": "ROLE_USER"
+    }
+]
