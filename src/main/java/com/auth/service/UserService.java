@@ -1,6 +1,7 @@
 package com.auth.service;
 
 import com.auth.dto.*;
+import com.auth.emailservice.infra.ses.SesEmailSender;
 import com.auth.emailservice.service.EmailSenderService;
 import com.auth.handler.MessagesExceptions;
 import com.auth.handler.exceptions.AuthException;
@@ -64,7 +65,7 @@ public class UserService {
             userRepository.saveAndFlush(newUser);
         });
         try{
-         emailSenderService.sendEmail("raulcesar.sm@gmail.com", "Sign-up of user", "Another user has been registered!");
+         emailSenderService.sendEmail(SesEmailSender.EMAIL, "Sign-up of user", "Another user has been registered!");
         } catch(EmailServiceException e){
             throw new EmailServiceException(MessagesExceptions.FAILURE_SEND_EMAIL);
         }
