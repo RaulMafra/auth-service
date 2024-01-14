@@ -35,8 +35,8 @@
   e na documentação existe a descrição de cada um deles.
 * A collection de usuários para teste está disponível em [Users Collection](https://github.com/RaulMafra/auth-service/blob/main/UsersCollection/Users.json). Vale ressaltar
   que essa collection possui apenas usuários com a role de usuários. Existe apenas um usuário com a role de administrator, sendo esse inserido no banco assim que a aplicação
-  inicializa, já que será executado em ambiente de desenvolvimento. Essa abordagem impede que qualquer usuário se cadastre e autentica como administrador.
+  inicializa, já que será executado em ambiente de desenvolvimento (essa abordagem impede que qualquer usuário se cadastre e autentica como administrador).
   
 ## License
 
-See the [LICENSE](https://github.com/RaulMafra/auth-service/blob/main/LICENSE) file for license rights and limitations (MIT).
+Veja o arquivo [LICENSE](https://github.com/RaulMafra/auth-service/blob/main/LICENSE) para direitos de licença e limitações (MIT).
